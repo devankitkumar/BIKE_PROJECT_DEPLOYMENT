@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-import joblib
+import joblib,sqlite3
 
 
 model = joblib.load("./models/linear_model.lb")
@@ -28,6 +28,21 @@ def predict():
 
         UNSEEN_DATA = [[Kms_Driven,owner,age,power,brand_name]]
         PREDICTION = model.predict(UNSEEN_DATA)[0][0] # array[25421.25421]
+
+        query_to_insert = """
+        Insert into BikeDetails values(?,?,?,?,?,?)
+        """
+
+        conn = sqlite3.connect('bikedata.db')
+        cur = conn.cursor()
+        data = (owner,brand_dict2[brand_name],Kms_Driven,power,age,PREDICTION)
+        cur.execute(query_to_insert,data)
+        conn.commit()
+        print("Your record has been stored in database")
+        cur.close()
+        conn.close()
+
+
 
         return render_template('home.html' , prediction_text = str(round(PREDICTION,2)))
 

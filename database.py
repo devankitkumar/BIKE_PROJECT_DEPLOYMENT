@@ -1,9 +1,9 @@
 ### database and table creation
 import sqlite3
-conn = sqlite3.connect('bikedata_db')
+conn = sqlite3.connect('bikedata.db')
 
 query_to_create_table = """
-CREATE TABLE CarDetails (
+CREATE TABLE BikeDetails (
     owner INT,
     brand VARCHAR(40),
     kms_driven INT,
